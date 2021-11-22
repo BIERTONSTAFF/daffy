@@ -2,7 +2,7 @@
 #define DAF_TOKEN_H
 
 typedef struct TOKEN_STRUCT {
-    char* value;
+    char* val;
     enum {
         TOKEN_ID,
         TOKEN_EQUALS,
@@ -21,7 +21,7 @@ typedef struct TOKEN_STRUCT {
     } type;
 } token_t;
 
-token_t* init_token(char* value, int type);
+token_t* init_token(char* val, int type);
 
 const char* token_type_to_str(int type);
 
