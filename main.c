@@ -10,4 +10,4 @@ int main(int argc, char* argv[]) {
     daf_compile_file(argv[1]);
 
     return 0;
-};
+}

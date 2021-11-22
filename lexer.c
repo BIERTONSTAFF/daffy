@@ -31,11 +31,11 @@ token_t* lexer_advance_with(lexer_t* lexer, token_t* token) {
 }
 
 token_t* lexer_advance_current(lexer_t* lexer, int type) {
-    char* value = calloc(2, sizeof(char));
-    value[0] = lexer->c;
-    value[1] = '\0';
+    char* val = calloc(2, sizeof(char));
+    val[0] = lexer->c;
+    val[1] = '\0';
 
-    token_t* token = init_token(value, type);
+    token_t* token = init_token(val, type);
     lexer_advance(lexer);
 
     return token;
@@ -47,39 +47,41 @@ void lexer_skip_whitespace(lexer_t* lexer) {
 }
 
 token_t* lexer_parse_id(lexer_t* lexer) {
-    char* value = calloc(1, sizeof(char));
+    char* val = calloc(1, sizeof(char));
     while (isalpha(lexer->c)) {
-        value = realloc(value, (strlen(value) + 2) * sizeof(char));
-        strcat(value, (char[]){ lexer->c, 0 });
+        val = realloc(val, (strlen(val) + 2) * sizeof(char));
+        strcat(val, (char[]){ lexer->c, 0 });
         lexer_advance(lexer);
-    };
+    }
 
-    return init_token(value, TOKEN_ID);
-};
+    return init_token(val, TOKEN_ID);
+}
 
 token_t* lexer_parse_number(lexer_t* lexer) {
-    char* value = calloc(1, sizeof(char));
+    char* val = calloc(1, sizeof(char));
     while (isdigit(lexer->c)) {
-        value = realloc(value, (strlen(value) + 2) * sizeof(char));
-        strcat(value, (char[]){ lexer->c, 0 });
+        val = realloc(val, (strlen(val) + 2) * sizeof(char));
+        strcat(val, (char[]){ lexer->c, 0 });
         lexer_advance(lexer);
-    };
+    }
 
-    return init_token(value, TOKEN_INT);
-};
+    return init_token(val, TOKEN_INT);
+}
 
 token_t* lexer_next_token(lexer_t* lexer) {
     while (lexer->c != '\0') {
         lexer_skip_whitespace(lexer);
-        if (isalnum(lexer->c))
-            return lexer_advance_with(lexer, lexer_parse_id(lexer));
+        if (isalpha(lexer->c))
+            return lexer_parse_id(lexer);
 
         if (isdigit(lexer->c))
-            return lexer_advance_with(lexer, lexer_parse_number(lexer));
+            return lexer_parse_number(lexer);
 
         switch (lexer->c) {
             case '=': {
-                if (lexer_peek(lexer, 1) == '>') return lexer_advance_with(lexer, init_token("=>", TOKEN_ARROW_RIGHT));
+                if (lexer_peek(lexer, 1) == '>')
+                    return lexer_advance_with(lexer,lexer_advance_with(lexer,init_token("=>",
+                                                                                   TOKEN_ARROW_RIGHT)));
                 return lexer_advance_with(lexer, init_token("=", TOKEN_EQUALS));
             }
             case '(':
@@ -109,4 +111,4 @@ token_t* lexer_next_token(lexer_t* lexer) {
     }
 
     return init_token(0, TOKEN_EOF);
-};
+}
