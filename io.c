@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "../lib/getline.c"
 #include "include/io.h"
 
@@ -30,4 +31,20 @@ char* daf_read_file(const char* filename) {
     if (line)
         free(line);
     return buffer;
+}
+
+void daf_write_file(const char* filename, char* buf) {
+    FILE *fp;
+
+    fp = fopen(filename, "wb");
+
+    if (fp == NULL) {
+        printf("Could not write to file '%s'\n", filename);
+        exit(1);
+    }
+
+    fputs(buf, fp);
+//    fprintf(fp, buf);
+
+    fclose(fp);
 }
